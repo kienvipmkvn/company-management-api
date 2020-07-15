@@ -15,23 +15,27 @@ namespace CompanyManagement.Controllers
         private CompanyRepository _companyRepository;
         private ProductRepository _productRepository;
 
-        //GET: api/Management
-        public IEnumerable<Company> GetCompanies()
+
+        //GET: api/Management/
+        public object GetCompanies(int pageNumber = 1, int rowPerPage = 10)
         {
             _companyRepository = new CompanyRepository();
             _productRepository = new ProductRepository();
-            List<Company> companies = _companyRepository.Get();
+
+            List<Company> companies = _companyRepository.Get(pageNumber, rowPerPage);
             foreach (var company in companies)
             {
                 List<Product> products = _productRepository.Get(company.CompanyID);
                 company.ListProduct = products;
             }
-            return companies;
+            int numberOfRecords = _companyRepository.GetNumberOfRecord();
+            var obj = new { companies, numberOfRecords };
+            return obj;
         }
 
         //PUT: api/Management/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutCompany(int id, Company company)
+        public IHttpActionResult PutCompany(int id, Company company, string email)
         {
             if (id != company.CompanyID) return BadRequest();
             _companyRepository = new CompanyRepository();
@@ -83,32 +87,32 @@ namespace CompanyManagement.Controllers
                 }
             }
 
-            _companyRepository.Edit(company, 1);
+            _companyRepository.Edit(company, email);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
         //POST: api/Management
         [ResponseType(typeof(Company))]
-        public IHttpActionResult PostCompany(Company company)
+        public int PostCompany(Company company, string email)
         {
             _companyRepository = new CompanyRepository();
             _productRepository = new ProductRepository();
 
-            int id = _companyRepository.Create(company, 1);
+            int id = _companyRepository.Create(company, email);
             foreach (var product in company.ListProduct)
             {
                 _productRepository.AddToCompany(id, product);
             }
 
-            return CreatedAtRoute("DefaultApi", new { id }, company);
+            return id;
         }
 
         //DELETE: api/Management/5
         [ResponseType(typeof(Company))]
-        public IHttpActionResult DeleteCompany(int id)
+        public IHttpActionResult DeleteCompany(int id, string email)
         {
             _companyRepository = new CompanyRepository();
-            _companyRepository.Delete(id, 1);
+            _companyRepository.Delete(id, email);
             return Ok();
         }
 

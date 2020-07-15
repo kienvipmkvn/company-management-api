@@ -22,10 +22,27 @@ namespace CompanyManagement.DAL.Repository
             _connection.Open();
         }
 
-        public List<Company> Get()
+        public List<object> GetAddressGroup()
         {
-            return _connection.Query<Company>("spCompanyList",
-                commandType: CommandType.StoredProcedure).ToList();
+            return _connection.Query("spAddressGroup", commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public List<object> GetAddressGroupShow(string groupKey)
+        {
+            return _connection.Query("spAddressGroupShow", new { groupKey }, commandType: CommandType.StoredProcedure).ToList();
+        }
+        public List<Company> Get(int? pageNumber, int? numberOfRecord)
+        {
+            return _connection.Query<Company>("spCompanyPageList", new
+            {
+                pageNumber,
+                numberOfRecord
+            }, commandType: CommandType.StoredProcedure).ToList();
+        }
+
+        public int GetNumberOfRecord()
+        {
+            return int.Parse(_connection.ExecuteScalar("spCountRecords", commandType: CommandType.StoredProcedure).ToString());
         }
 
         public Company GetById(int id)
@@ -34,7 +51,7 @@ namespace CompanyManagement.DAL.Repository
                 commandType: CommandType.StoredProcedure).FirstOrDefault();
         }
 
-        public int Create(Company company, int id)
+        public int Create(Company company, string email)
         {
             var result = _connection.ExecuteScalar("spCreateCompany", new
             {
@@ -43,14 +60,14 @@ namespace CompanyManagement.DAL.Repository
                 company.Address,
                 company.ImgPath,
                 company.EstablishmentDay,
-                createbyuser = id,
-                updatebyuser = id
+                createbyuser = email,
+                updatebyuser = email
             }, commandType: CommandType.StoredProcedure);
 
             return int.Parse(result.ToString());
         }
 
-        public void Edit(Company company, int id)
+        public void Edit(Company company, string email)
         {
             _connection.Execute("spEditCompany", new
             {
@@ -60,14 +77,14 @@ namespace CompanyManagement.DAL.Repository
                 company.Address,
                 company.ImgPath,
                 company.EstablishmentDay,
-                updatebyuser = id
+                updatebyuser = email
             },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void Delete(int comid, int adid)
+        public void Delete(int comid, string email)
         {
-            _connection.Execute("spDeleteCompany", new { companyid = comid, userid = adid },
+            _connection.Execute("spDeleteCompany", new { companyid = comid, userid = email },
                 commandType: CommandType.StoredProcedure);
         }
     }

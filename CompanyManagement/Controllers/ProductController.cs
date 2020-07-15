@@ -13,9 +13,10 @@ namespace CompanyManagement.Controllers
     {
         ProductRepository _productRepository;
         // GET: api/Product
-        public IEnumerable<string> Get()
+        public IEnumerable<Product> Get()
         {
-            return new string[] { "value1", "value2" };
+            _productRepository = new ProductRepository();
+            return _productRepository.GetProducts();
         }
 
         // GET: api/Product/5
@@ -25,10 +26,10 @@ namespace CompanyManagement.Controllers
         }
 
         // POST: api/Product
-        public void Post(Product product)
+        public int Post(Product product)
         {
             _productRepository = new ProductRepository();
-            _productRepository.Create(product);
+            return _productRepository.Create(product);
         }
 
         // PUT: api/Product/5

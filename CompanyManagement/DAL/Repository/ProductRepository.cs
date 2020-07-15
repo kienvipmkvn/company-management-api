@@ -22,6 +22,11 @@ namespace CompanyManagement.DAL.Repository
             _connection.Open();
         }
 
+        public List<Product> GetProducts()
+        {
+            return _connection.Query<Product>("spGetProducts", commandType: CommandType.StoredProcedure).ToList();
+        }
+
         public List<Product> Get(int id)
         {
             return _connection.Query<Product>("spProductList", new { companyid = id },
@@ -56,7 +61,9 @@ namespace CompanyManagement.DAL.Repository
 
         public void AddToCompany(int companyid, Product product)
         {
-            int productid = Create(product);
+            int productid;
+            if (product.ProductID == 0) productid = Create(product);
+            else productid = product.ProductID;
 
             _connection.Execute("spAddProductToCompany", new { companyid, productid}, commandType: CommandType.StoredProcedure);
         }

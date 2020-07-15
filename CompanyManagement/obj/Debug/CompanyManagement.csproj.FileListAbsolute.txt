@@ -86,4 +86,4 @@ D:\Intern\Angular\ProjectCompany\CompanyManagement\CompanyManagement\bin\System.
 D:\Intern\Angular\ProjectCompany\CompanyManagement\CompanyManagement\bin\System.Web.Http.Cors.dll
 D:\Intern\Angular\ProjectCompany\CompanyManagement\CompanyManagement\bin\Dapper.xml
 D:\Intern\Angular\ProjectCompany\CompanyManagement\CompanyManagement\bin\System.Web.Http.Cors.xml
-D:\Intern\Angular\ProjectCompany\CompanyManagement\CompanyManagement\obj\Debug\CompanyManagement.csprojAssemblyReference.cache
+D:\Intern\Angular\ProjectCompany\CompanyManagement\CompanyManagement\obj\Debug\CompanyManagement.csproj.CoreCompileInputs.cache
